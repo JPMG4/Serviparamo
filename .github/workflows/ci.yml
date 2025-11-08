@@ -1,4 +1,5 @@
 ﻿name: CI Pipeline - Serviparamo Backend
+
 on:
   push:
     branches: [ "main" ]
@@ -11,16 +12,17 @@ jobs:
 
     steps:
     - name: 🔄 Checkout del repositorio
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: 🟢 Configurar Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: 18
-        cache: "npm"
+        cache: npm
 
     - name: 📦 Instalar dependencias
-      run: npm install
+      run: |
+        if [ -f package-lock.json ]; then npm ci; else npm install; fi
 
     - name: ✅ Ejecutar tests (simulados)
       run: npm test
@@ -29,7 +31,7 @@ jobs:
       run: zip -r build.zip .
 
     - name: 📥 Publicar artefacto
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: build
         path: build.zip
