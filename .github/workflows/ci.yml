@@ -1,0 +1,35 @@
+﻿name: CI Pipeline - Serviparamo Backend
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 🔄 Checkout del repositorio
+      uses: actions/checkout@v3
+
+    - name: 🟢 Configurar Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+        cache: "npm"
+
+    - name: 📦 Instalar dependencias
+      run: npm install
+
+    - name: ✅ Ejecutar tests (simulados)
+      run: npm test
+
+    - name: 📁 Empaquetar artefacto
+      run: zip -r build.zip .
+
+    - name: 📥 Publicar artefacto
+      uses: actions/upload-artifact@v3
+      with:
+        name: build
+        path: build.zip
